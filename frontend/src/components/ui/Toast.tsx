@@ -8,8 +8,7 @@ import {
   useState,
 } from "react";
 import { cn } from "@/lib/cn";
-
-type Tone = "info" | "success" | "error";
+import { inferTone, type Tone } from "@/lib/tone";
 
 interface ToastItem {
   id: number;
@@ -22,19 +21,6 @@ interface ToastContextValue {
 }
 
 const ToastCtx = createContext<ToastContextValue>({ toast: () => {} });
-
-function inferTone(message: string): Tone {
-  if (message.startsWith("Error")) return "error";
-  if (
-    message.includes("successful") ||
-    message.includes("complete") ||
-    message.includes("Done") ||
-    message.includes("loaded") ||
-    message.includes("verified")
-  )
-    return "success";
-  return "info";
-}
 
 export function ToastProvider({ children }: { children: React.ReactNode }) {
   const [toasts, setToasts] = useState<ToastItem[]>([]);
