@@ -113,12 +113,15 @@ export default function DepositPage() {
   const [pendingTx, setPendingTx] = useState<StellarSdk.Transaction | null>(
     null,
   );
+<<<<<<< HEAD
   // Notes built during the deposit call, held until the user confirms and signs.
   const pendingNotesRef = useRef<ShieldedNote[]>([]);
   // Note count as of the moment the transaction was built. `totalNotes` is
   // derived from `customAmount`, which handleDeposit clears before the user
   // confirms, so the modal can't read it without showing the wrong total.
   const [confirmNoteCount, setConfirmNoteCount] = useState(0);
+=======
+>>>>>>> d380a0ea1489cec30a6f41bb60bcc64dc743a90c
 
   const noteCount = (() => {
     if (!customAmount || !selectedTier) return 1;
@@ -217,9 +220,14 @@ export default function DepositPage() {
       setEstimatedFee(tx.fee.toString());
       setPendingTx(tx);
       // Keep pending notes for later processing after confirmation
+<<<<<<< HEAD
       pendingNotesRef.current = pending;
 
       setConfirmNoteCount(total);
+=======
+      (window as any).__pendingNotes = pending; // temporary global for demo
+
+>>>>>>> d380a0ea1489cec30a6f41bb60bcc64dc743a90c
       setShowConfirm(true);
     } catch (err) {
       console.error("Deposit error:", err);
@@ -242,7 +250,11 @@ export default function DepositPage() {
       toast("Sending to the network…");
       await submitTransaction(signedXdr);
 
+<<<<<<< HEAD
       const pending: ShieldedNote[] = pendingNotesRef.current;
+=======
+      const pending: ShieldedNote[] = (window as any).__pendingNotes || [];
+>>>>>>> d380a0ea1489cec30a6f41bb60bcc64dc743a90c
       const created: ShieldedNote[] = [];
       for (const note of pending) {
         saveNote(note);
@@ -271,9 +283,55 @@ export default function DepositPage() {
       setIsLoading(false);
       setShowConfirm(false);
       setPendingTx(null);
+<<<<<<< HEAD
       pendingNotesRef.current = [];
+=======
+      (window as any).__pendingNotes = null;
+>>>>>>> d380a0ea1489cec30a6f41bb60bcc64dc743a90c
     }
   }
+
+  /** Confirmation UI component */
+  const ConfirmDeposit = () => (
+    <Card className="fixed inset-0 flex items-center justify-center bg-black/60 backdrop-blur-sm z-50">
+      <div className="max-w-md w-full bg-zinc-900 p-6 rounded-xl border border-zinc-700 shadow-lg">
+        <h2 className="text-lg font-semibold mb-4 text-zinc-200">
+          Confirm Deposit
+        </h2>
+        <p className="text-sm text-zinc-400 mb-2">
+          Tier:{" "}
+          <span className="font-medium text-zinc-200">
+            {selectedTier?.label}
+          </span>
+        </p>
+        <p className="text-sm text-zinc-400 mb-2">
+          Total USDC:{" "}
+          <span className="font-medium text-zinc-200">
+            {(totalNotes * selectedTier?.amount ?? 0) / 10 ** TOKEN_DECIMALS}{" "}
+            {TOKEN_SYMBOL}
+          </span>
+        </p>
+        <p className="text-sm text-zinc-400 mb-4">
+          Estimated fee:{" "}
+          <span className="font-medium text-zinc-200">
+            {formatStroops(Number(estimatedFee))} XLM
+          </span>
+        </p>
+        <div className="flex gap-4 justify-end">
+          <Button
+            variant="outline"
+            onClick={() => setShowConfirm(false)}
+            disabled={isLoading}
+          >
+            Cancel
+          </Button>
+          <Button onClick={signAndSubmit} disabled={isLoading}>
+            Confirm
+          </Button>
+        </div>
+      </div>
+    </Card>
+  );
 
   function copyText(text: string, key: string) {
     try {

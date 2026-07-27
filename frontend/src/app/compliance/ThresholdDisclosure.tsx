@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 // NOTE: This component is not currently rendered anywhere. It was written
 // against a `generateThresholdProof(note, threshold)` helper that no longer
 // exists — the prover now exposes `proveDisclosure`, which additionally needs
@@ -6,6 +7,11 @@
 // input-assembly work rather than a mechanical rename.
 import { useState } from "react";
 import { ShieldedNote } from "@/lib/notes";
+=======
+import { useState } from "react";
+import { ShieldedNote } from "@/lib/notes";
+import { generateThresholdProof } from "@/lib/prover";
+>>>>>>> d380a0ea1489cec30a6f41bb60bcc64dc743a90c
 import { Button } from "@/components/ui/Button";
 import { useToast } from "@/components/ui/Toast";
 
@@ -24,10 +30,16 @@ export default function ThresholdDisclosure({ notes }: Props) {
     if (!selectedNote || !threshold) return;
     setLoading(true);
     try {
+<<<<<<< HEAD
       throw new Error(
         "Threshold disclosure is not wired up yet: proveDisclosure needs the " +
           "auditor key, KYC hash and merkle path, which aren't available here.",
       );
+=======
+      const result = await generateThresholdProof(selectedNote, threshold);
+      setProof(JSON.stringify(result, null, 2));
+      toast("Threshold proof generated", "success");
+>>>>>>> d380a0ea1489cec30a6f41bb60bcc64dc743a90c
     } catch (e) {
       toast(`Error: ${e}`, "error");
     } finally {

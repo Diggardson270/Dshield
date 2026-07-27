@@ -32,8 +32,11 @@ pub enum PoolError {
     AmountOverflow = 13,
     BatchTooLarge = 14,
     InvalidDepositAmount = 15,
+<<<<<<< HEAD
     Paused = 16,
     NotAuthorized = 17,
+=======
+>>>>>>> d380a0ea1489cec30a6f41bb60bcc64dc743a90c
 }
 
 #[contractevent(topics = ["deposit"], data_format = "map")]
